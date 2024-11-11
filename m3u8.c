@@ -3,16 +3,13 @@
 #include <stdio.h>
 
 __declspec(dllexport) char* parse(const char* m3u8Path) {
-    static char tempPath[MAX_PATH];
-    char excute[1024];
-    char outpath[MAX_PATH];
-    char m3u8Dir[MAX_PATH];
-    char originalDir[MAX_PATH];
-	memset(tempPath, 0, 1024);
-    memset(excute, 0, 1024);
-    memset(outpath, 0, MAX_PATH);
-    memset(m3u8Dir, 0, MAX_PATH);
-    memset(originalDir, 0, MAX_PATH);
+    static char tempPath[MAX_PATH] = "\0";
+    char excute[1024] = "\0";
+    char outpath[MAX_PATH] = "\0";
+    char m3u8Dir[MAX_PATH] = "\0";
+    char originalDir[MAX_PATH] = "\0";
+    char driver[4] = "\0";
+    char dir[MAX_PATH] = "\0";
 
     // 获取系统的临时目录
     DWORD pathLength = GetTempPath(MAX_PATH, tempPath);
@@ -36,7 +33,8 @@ __declspec(dllexport) char* parse(const char* m3u8Path) {
     }
     printf("Original directory: %s\n", originalDir);
     // 获取m3u8文件所在目录
-    _splitpath(m3u8Path, NULL, m3u8Dir, NULL, NULL);
+    _splitpath(m3u8Path, driver, dir, NULL, NULL);
+    sprintf_s(m3u8Dir, sizeof(m3u8Dir), "%s%s", driver, dir);
     printf("M3U8 directory: %s\n", m3u8Dir);
     // 切换到m3u8文件所在目录
     if (SetCurrentDirectory(m3u8Dir) == 0)
