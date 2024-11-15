@@ -37,8 +37,9 @@ uintptr parseFunc = 0;
 // 主解析函数
 string PlayitemParse(const string &in path, dictionary &MetaData, array<dictionary> &QualityList)
 {
-    //HostOpenConsole();  // 打开调试控制台
+    // HostOpenConsole();  // 打开调试控制台
     // HostPrintUTF8("PlayitemParse called with path: " + path + "\n");
+
     // 防止多次解析同一个文件
     string savePath = HostLoadString("m3u8");
     if (savePath == path) return HostLoadString("video");
@@ -67,7 +68,8 @@ string PlayitemParse(const string &in path, dictionary &MetaData, array<dictiona
     }
 
     // 3. 准备输入参数
-    uintptr pathPtr = HostString2UIntPtr(path);
+    // 将路径转换为MBCS编码，否则中文路径会出现乱码
+    uintptr pathPtr = HostString2UIntPtr(HostUTF8ToMBCS(path));
 
     // 4. 调用函数
     // "P" 表示参数类型是指针(Pointer)
@@ -80,9 +82,10 @@ string PlayitemParse(const string &in path, dictionary &MetaData, array<dictiona
     }
     // 5. 转换返回的指针为字符串
     string videoUrl = HostUIntPtr2String(result);
-    // HostPrintUTF8("解析结果: " + videoUrl + "\n");
+    HostPrintUTF8("解析结果: " + videoUrl + "\n");
     // 保存该文件名到临时缓存，防止多次解析
     HostSaveString("m3u8", path);
     HostSaveString("video", videoUrl);
-    return videoUrl;
+
+    return HostUTF8ToMBCS(videoUrl);
 }

@@ -4,12 +4,14 @@
 
 __declspec(dllexport) char* parse(const char* m3u8Path) {
     static char tempPath[MAX_PATH] = "\0";
+    static char outpath[MAX_PATH] = "\0";
     char excute[1024] = "\0";
-    char outpath[MAX_PATH] = "\0";
     char m3u8Dir[MAX_PATH] = "\0";
     char originalDir[MAX_PATH] = "\0";
     char driver[4] = "\0";
     char dir[MAX_PATH] = "\0";
+
+    printf("输入文件 input file : %s\n", m3u8Path);
 
     // 获取系统的临时目录
     DWORD pathLength = GetTempPath(MAX_PATH, tempPath);
@@ -18,7 +20,7 @@ __declspec(dllexport) char* parse(const char* m3u8Path) {
         return NULL;
     }
     //printf("Temp directory: %s\n", tempPath);
-    sprintf_s(outpath, sizeof(outpath), "%s\output.ts", tempPath);
+    sprintf_s(outpath, sizeof(outpath), "%s\\output.ts", tempPath);
     printf("Output path: %s\n", outpath);
 
     // 拼接 ffmpeg 命令
